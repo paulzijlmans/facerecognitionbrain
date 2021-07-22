@@ -5,6 +5,7 @@ import Navigation from './components/Navigation/Navigation';
 import Logo from './components/Logo/Logo';
 import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
+import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import './App.css';
 
 const app = new Clarifai.App({
@@ -69,12 +70,12 @@ class App extends Component {
 
   onButtonSubmit = () => {
     console.log('click');
-    app.models.predict('c0c0ac362b03416da06ab3fa36fb58e3', 'https://samples.clarifai.com/face-det.jpg').then(
+    app.models.predict('f76196b43bbd45c99b4f3cd8e8b40a8a', 'https://samples.clarifai.com/face-det.jpg').then(
       function (response) {
-
+        console.log(response);
       },
       function (err) {
-
+        console.log(err);
       }
     );
   }
@@ -92,7 +93,7 @@ class App extends Component {
           onInputChange={this.onInputChange}
           onButtonSubmit={this.onButtonSubmit}
         />
-        {/* <FaceRecognition />  */}
+        <FaceRecognition />
       </div>
     );
   }
