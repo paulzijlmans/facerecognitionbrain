@@ -61,7 +61,20 @@ class App extends Component {
     super();
     this.state = {
       input: '',
-      imageUrl: ''
+      imageUrl: '',
+      box: {}
+    }
+  }
+
+  calculateFaceLocation = (data) => {
+    const clarifaiFace = data.outputs[0].data.regions[0].region_info.bounding_box;
+    const image = document.getElementById('inputImage');
+    const width = Number(image.width);
+    const height = Number(image.height);
+    console.log(width, height);
+    console.log('clarifaiFace', clarifaiFace);
+    return {
+      
     }
   }
 
@@ -71,17 +84,12 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    app.models.predict(
-      'f76196b43bbd45c99b4f3cd8e8b40a8a',
-      this.state.input)
-      .then(
-        function (response) {
-          console.log(response.outputs[0].data.regions[0].region_info.bounding_box);
-        },
-        function (err) {
-          console.log(err);
-        }
-      );
+    app.models
+      .predict(
+        'f76196b43bbd45c99b4f3cd8e8b40a8a',
+        this.state.input)
+      .then(response => this.calculateFaceLocation(response))
+      .catch(err => console.log(err));
   }
 
   render() {
