@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import Particles from "react-tsparticles";
-import Clarifai from 'clarifai';
 import Navigation from './components/Navigation/Navigation';
 import Signin from './components/Signin/Signin';
 import Register from './components/Register/Register';
@@ -9,10 +8,6 @@ import Rank from './components/Rank/Rank';
 import ImageLinkForm from './components/ImageLinkForm/ImageLinkForm';
 import FaceRecognition from './components/FaceRecognition/FaceRecognition';
 import './App.css';
-
-const app = new Clarifai.App({
-  apiKey: 'f66a5232e20740b2b15f43b94af615c3'
-});
 
 const particlesOptions = {
   fpsLimit: 60,
@@ -114,11 +109,15 @@ class App extends Component {
 
   onButtonSubmit = () => {
     this.setState({ imageUrl: this.state.input });
-    app.models
-      .predict(
-        'f76196b43bbd45c99b4f3cd8e8b40a8a',
-        this.state.input)
-      .then(response => {
+    fetch('http://localhost:3000/imageUrl', {
+      method: 'post',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        input: this.state.input
+      })
+    })
+    .then(response => response.json())
+    .then(response => {
         if (response) {
           fetch('http://localhost:3000/image', {
             method: 'put',
