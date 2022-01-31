@@ -1,7 +1,7 @@
 import React from 'react';
 import './Profile.css';
 
-const Profile = ({ isProfileOpen, toggleModal }) => {
+const Profile = ({ isProfileOpen, toggleModal, user }) => {
   return (
     <div className='profile-modal'>
       <article className="br3 ba b--black-10 mv4 w-100 w-50-m w-25-l mw6 shadow-5 center bg-white">
@@ -9,28 +9,28 @@ const Profile = ({ isProfileOpen, toggleModal }) => {
           <img
             src='http://tachyons.io/img/logo.jpg'
             className='h3 w3 dib' alt='avatar' />
-          <h1>John Doe</h1>
-          <h4>Image Submitted: 5</h4>
-          <p>Member since: January</p>
+          <h1>{user.name}</h1>
+          <h4>{`Image Submitted: ${user.entries}`}</h4>
+          <p>{`Member since: ${new Date(user.joined).toLocaleDateString()}`}</p>
           <hr />
           <label className="mt2 fw6" htmlFor="username">Name:</label>
           <input
             className="pa2 ba w-100"
-            placeholder='john'
+            placeholder={user.name}
             type="text"
             name="username"
             id="username" />
           <label className="mt2 fw6" htmlFor="age">Age:</label>
           <input
             className="pa2 ba w-100"
-            placeholder='56'
+            placeholder={user.age}
             type="text"
             name="age"
             id="age" />
           <label className="mt2 fw6" htmlFor="pet">Pet:</label>
           <input
             className="pa2 ba w-100"
-            placeholder='dragon'
+            placeholder={user.pet}
             type="text"
             name="pet"
             id="pet" />
