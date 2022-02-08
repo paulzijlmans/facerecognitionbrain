@@ -47,10 +47,23 @@ class App extends Component {
           'Authorization': token
         }
       })
-      .then(resp => resp.json())
+        .then(resp => resp.json())
         .then(data => {
           if (data && data.id) {
-            console.log('success we need to get user profile');
+            fetch(`${process.env.REACT_APP_SERVER}/profile/${data.id}`, {
+              method: 'get',
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': token
+              }
+            })
+            .then(resp => resp.json())
+            .then(user => {
+              if(user && user.email) {
+                this.loadUser(user);
+                this.onRouteChange('home');
+              }
+            })
           }
         })
         .catch(console.log);
