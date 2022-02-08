@@ -57,13 +57,13 @@ class App extends Component {
                 'Authorization': token
               }
             })
-            .then(resp => resp.json())
-            .then(user => {
-              if(user && user.email) {
-                this.loadUser(user);
-                this.onRouteChange('home');
-              }
-            })
+              .then(resp => resp.json())
+              .then(user => {
+                if (user && user.email) {
+                  this.loadUser(user);
+                  this.onRouteChange('home');
+                }
+              })
           }
         })
         .catch(console.log);
@@ -83,22 +83,26 @@ class App extends Component {
   }
 
   calculateFaceLocations = (data) => {
-    return data.outputs[0].data.regions.map(face => {
-      const clarifaiFace = face.region_info.bounding_box;
-      const image = document.getElementById('inputImage');
-      const width = Number(image.width);
-      const height = Number(image.height);
-      return {
-        leftCol: clarifaiFace.left_col * width,
-        topRow: clarifaiFace.top_row * height,
-        rightCol: width - (clarifaiFace.right_col * width),
-        bottomRow: height - (clarifaiFace.bottom_row * height)
-      }
-    });
+    if (data && data.outputs) {
+      return data.outputs[0].data.regions.map(face => {
+        const clarifaiFace = face.region_info.bounding_box;
+        const image = document.getElementById('inputImage');
+        const width = Number(image.width);
+        const height = Number(image.height);
+        return {
+          leftCol: clarifaiFace.left_col * width,
+          topRow: clarifaiFace.top_row * height,
+          rightCol: width - (clarifaiFace.right_col * width),
+          bottomRow: height - (clarifaiFace.bottom_row * height)
+        }
+      });
+    }
   }
 
   displayFaceBoxes = (boxes) => {
-    this.setState({ boxes: boxes });
+    if (boxes) {
+      this.setState({ boxes: boxes });
+    }
   }
 
   onInputChange = (event) => {
@@ -109,7 +113,10 @@ class App extends Component {
     this.setState({ imageUrl: this.state.input });
     fetch(`${process.env.REACT_APP_SERVER}/imageUrl`, {
       method: 'post',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': window.sessionStorage.getItem('token')
+      },
       body: JSON.stringify({
         input: this.state.input
       })
@@ -119,7 +126,10 @@ class App extends Component {
         if (response) {
           fetch(`${process.env.REACT_APP_SERVER}/image`, {
             method: 'put',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': window.sessionStorage.getItem('token')
+            },
             body: JSON.stringify({
               id: this.state.user.id
             })
